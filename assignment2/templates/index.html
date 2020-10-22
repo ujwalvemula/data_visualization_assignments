@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <title>Visualization Assignment 2</title>
+    <script src="{{url_for('static', filename='d3.min.js')}}"></script>
+    <script src="{{url_for('static', filename='charts.js')}}"></script>
+</head>
+<style> /* set the CSS */
+
+body { font: 12px Arial;}
+
+path {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+#wrapper {
+    overflow: hidden;
+}
+#first, #second, #third {
+    float:left;
+}
+
+
+</style>
+<body>
+  <div id="header" style="background-color:#3182bd; color:#ffffff;">
+    <center>
+      <h1 style = "padding-top: 20px;margin-top: 0px;">Visualization Assignment 2</h1>
+      <h2 id="datasetTitle" style = "padding-bottom: 20px;">Craigslist Car Data</h2>
+    </center>
+    </div>
+<center><div class="chartSelect"></div></center>
+<div class = 'screeplots'>
+  <center>
+    <h3 class = "screeTitles">Original Data</h3>
+    <div class="chart" style="max-width: 1000px;"></div>
+    <h3 class = "screeTitles">Random Sample</h3>
+    <div class="chart1" style="max-width: 1000px;"></div>
+    <h3 class = "screeTitles">Stratified Data</h3>
+    <div class="chart2" style="max-width: 1000px;"></div>
+  </center>
+</div>
+<div id = 'wrapper' class = 'scatterplots'>
+  <center>
+    <h3 class = "dataTitle">TOP 2 PCA VECTORS</h3>
+      <div id = 'first'>
+        <center>
+          <div  class="scatterplot1" style="max-width: 450px;"></div>
+          <h3 class = "dataTitle">Original Data</h3>
+        </center>
+    </div>
+    <div id = 'second'>
+      <center>
+        <div  class="scatterplot2" style="max-width: 450px;"></div>
+        <h3 class = "dataTitle">Random Sample</h3>
+      </center>
+    </div>
+    <div id = 'third'>
+        <center>
+          <div class="scatterplot3" style="max-width: 450px;"></div>
+          <h3 class = "dataTitle">Stratified Data</h3>
+        </center>
+    </div>
+  </center>
+</div>
+
+<div id = 'wrapper' class = 'mdsscatterplots'>
+  <center>
+    <h3 class = "mdsTitles">MDS with Euclidean Distance</h3>
+      <div id = 'first'>
+        <center>
+          <div class="mdsscatterplot1" style="max-width: 450px;"></div>
+          <h3 class = "mdsTitles">Original Data</h3>
+        </center>
+    </div>
+    <div id = 'second'>
+      <center>
+        <div class="mdsscatterplot2" style="max-width: 450px;"></div>
+        <h3 class = "mdsTitles">Random Sample</h3>
+      </center>
+    </div>
+    <div id = 'third'>
+        <center>
+          <div class="mdsscatterplot3" style="max-width: 450px;"></div>
+          <h3 class = "mdsTitles">Stratified Data</h3>
+        </center>
+    </div>
+  </center>
+</div>
+
+<div id = 'wrapper' class = 'mdscorscatterplots'>
+  <center>
+    <h3 class = "mdsTitles">MDS with Correlation Distance</h3>
+      <div id = 'first'>
+        <center>
+          <div class="mdscorscatterplot1" style="max-width: 450px;"></div>
+          <h3 class = "mdsTitles">Original Data</h3>
+        </center>
+    </div>
+    <div id = 'second'>
+      <center>
+        <div class="mdscorscatterplot2" style="max-width: 450px;"></div>
+        <h3 class = "mdsTitles">Random Sample</h3>
+      </center>
+    </div>
+    <div id = 'third'>
+        <center>
+          <div class="mdscorscatterplot3" style="max-width: 450px;"></div>
+          <h3 class = "mdsTitles">Stratified Data</h3>
+        </center>
+    </div>
+  </center>
+</div>
+
+<div id = 'wrapper' class = 'matrices' style="width:750px; margin:0 auto;">
+  <center>
+      <h3 class = "matrixTitles">ORIGINAL DATA</h3>
+      <div id = 'wrapper'>
+          <div id='first' class="scatmatrix0" style="max-width: 250px;"></div>
+          <div id='second' class="scatmatrix1" style="max-width: 250px;"></div>
+          <div id='third' class="scatmatrix2" style="max-width: 250px;"></div>
+      </div>
+      <div id = 'wrapper'>
+          <div id='first' class="scatmatrix3" style="max-width: 250px;"></div>
+          <div id='second' class="scatmatrix4" style="max-width: 250px;"></div>
+          <div id='third' class="scatmatrix5" style="max-width: 250px;"></div>
+      </div>
+      <div id = 'wrapper'>
+          <div id='first' class="scatmatrix6" style="max-width: 250px;"></div>
+          <div id='second' class="scatmatrix7" style="max-width: 250px;"></div>
+          <div id='third' class="scatmatrix8" style="max-width: 250px;"></div>
+      </div>
+  </center>
+</div>
+<div id = 'wrapper' class = 'matrices' style="width:750px; margin:0 auto;">
+  <center>
+      <h3 class = "matrixTitles">RANDOM SAMPLE</h3>
+      <div id = 'wrapper'>
+          <div id='first' class="scatmatrix9" style="max-width: 250px;"></div>
+          <div id='second' class="scatmatrix10" style="max-width: 250px;"></div>
+          <div id='third' class="scatmatrix11" style="max-width: 250px;"></div>
+      </div>
+      <div id = 'wrapper'>
+          <div id='first' class="scatmatrix12" style="max-width: 250px;"></div>
+          <div id='second' class="scatmatrix13" style="max-width: 250px;"></div>
+          <div id='third' class="scatmatrix14" style="max-width: 250px;"></div>
+      </div>
+      <div id = 'wrapper'>
+          <div id='first' class="scatmatrix15" style="max-width: 250px;"></div>
+          <div id='second' class="scatmatrix16" style="max-width: 250px;"></div>
+          <div id='third' class="scatmatrix17" style="max-width: 250px;"></div>
+      </div>
+  </center>
+</div>
+<div id = 'wrapper' class = 'matrices' style="width:750px; margin:0 auto;">
+  <center>
+      <h3 class = "matrixTitles">STRATIFIED DATA</h3>
+      <div id = 'wrapper'>
+          <div id='first' class="scatmatrix18" style="max-width: 250px;"></div>
+          <div id='second' class="scatmatrix19" style="max-width: 250px;"></div>
+          <div id='third' class="scatmatrix20" style="max-width: 250px;"></div>
+      </div>
+      <div id = 'wrapper'>
+          <div id='first' class="scatmatrix21" style="max-width: 250px;"></div>
+          <div id='second' class="scatmatrix22" style="max-width: 250px;"></div>
+          <div id='third' class="scatmatrix23" style="max-width: 250px;"></div>
+      </div>
+      <div id = 'wrapper'>
+          <div id='first' class="scatmatrix24" style="max-width: 250px;"></div>
+          <div id='second' class="scatmatrix25" style="max-width: 250px;"></div>
+          <div id='third' class="scatmatrix26" style="max-width: 250px;"></div>
+      </div>
+  </center>
+</div>
+
+
+
+<!-- <div id="option">
+    <input name="updateButton" type="button" value="Update" onclick="updateData()" />
+</div> -->
+
+<!-- load the d3.js library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+
+<script>
+console.log('inside script');
+var charts = [ '', 'Scree Plots', 'PCA Scatter Plots', 'MDS Scatter Plots', 'Scatter Matrix'];
+var matClasses = ['.scatmatrix0', '.scatmatrix1', '.scatmatrix2', '.scatmatrix3', '.scatmatrix4', '.scatmatrix5', '.scatmatrix6', '.scatmatrix7', '.scatmatrix8',
+              '.scatmatrix9', '.scatmatrix10', '.scatmatrix11', '.scatmatrix12', '.scatmatrix13', '.scatmatrix14', '.scatmatrix15', '.scatmatrix16', '.scatmatrix17',
+              '.scatmatrix18', '.scatmatrix19', '.scatmatrix20', '.scatmatrix21', '.scatmatrix22', '.scatmatrix23', '.scatmatrix24', '.scatmatrix25', '.scatmatrix26'];
+
+$(".screeTitles").hide();
+$(".dataTitle").hide();
+$(".mdsTitles").hide();
+$(".matrixTitles").hide();
+var deleteAllPlots = function() {
+  $( ".chart" ).empty();
+  $( ".chart1" ).empty();
+  $( ".chart2" ).empty();
+  $( ".scatterplot1" ).empty();
+  $( ".scatterplot2" ).empty();
+  $( ".scatterplot3" ).empty();
+  $( ".mdsscatterplot1" ).empty();
+  $( ".mdsscatterplot2" ).empty();
+  $( ".mdsscatterplot3" ).empty();
+  $( ".mdscorscatterplot1" ).empty();
+  $( ".mdscorscatterplot2" ).empty();
+  $( ".mdscorscatterplot3" ).empty();
+  $(".scatmatrix0").empty();
+  $(".scatmatrix1").empty();
+  $(".scatmatrix2").empty();
+  $(".scatmatrix3").empty();
+  $(".scatmatrix4").empty();
+  $(".scatmatrix5").empty();
+  $(".scatmatrix6").empty();
+  $(".scatmatrix7").empty();
+  $(".scatmatrix8").empty();
+  $(".scatmatrix9").empty();
+  $(".scatmatrix10").empty();
+  $(".scatmatrix11").empty();
+  $(".scatmatrix12").empty();
+  $(".scatmatrix13").empty();
+  $(".scatmatrix14").empty();
+  $(".scatmatrix15").empty();
+  $(".scatmatrix16").empty();
+  $(".scatmatrix17").empty();
+  $(".scatmatrix18").empty();
+  $(".scatmatrix19").empty();
+  $(".scatmatrix20").empty();
+  $(".scatmatrix21").empty();
+  $(".scatmatrix22").empty();
+  $(".scatmatrix23").empty();
+  $(".scatmatrix24").empty();
+  $(".scatmatrix25").empty();
+  $(".scatmatrix26").empty();
+  $(".screeTitles").hide();
+  $(".dataTitle").hide();
+  $(".mdsTitles").hide();
+  $(".matrixTitles").hide();
+
+};
+
+var changePlot = function() {
+  var chartOption = d3.select(this).property('value');
+  deleteAllPlots();
+  console.log('called delete');
+  if(chartOption === 'Scree Plots')
+  {
+    $.post("", {'data': 'scree plot'}, function(data_infunc){
+      screeData = JSON.parse(data_infunc);
+
+      console.log(screeData);
+      console.log(screeData.randomSampleData.pcaColumns);
+
+      new Chart({
+          	container: document.querySelector('.chart'),
+            xValues: screeData.originalData.pcaColumns,
+            yValues: screeData.originalData.explainedVariance
+      });
+      new Chart({
+            container: document.querySelector('.chart1'),
+            xValues: screeData.randomSampleData.pcaColumns,
+            yValues: screeData.randomSampleData.explainedVariance
+      });
+      new Chart({
+            container: document.querySelector('.chart2'),
+            xValues: screeData.stratifiedData.pcaColumns,
+            yValues: screeData.stratifiedData.explainedVariance
+      });
+      $(".screeTitles").show();
+    });
+  }
+  else if( chartOption === 'PCA Scatter Plots')
+  {
+    $.post("", {'data': 'pca scatter plot'}, function(data_infunc){
+      topPCData = JSON.parse(data_infunc);
+
+      new ScatterPlot({
+        container: document.querySelector('.scatterplot1'),
+        data: topPCData.originalData.dataf,
+        columns: topPCData.originalData.pcaColumns
+      });
+      new ScatterPlot({
+        container: document.querySelector('.scatterplot2'),
+        data: topPCData.randomSampleData.dataf,
+        columns: topPCData.randomSampleData.pcaColumns
+      });
+      new ScatterPlot({
+        container: document.querySelector('.scatterplot3'),
+        data: topPCData.stratifiedData.dataf,
+        columns: topPCData.stratifiedData.pcaColumns
+      });
+      $(".dataTitle").show();
+    });
+  }
+  else if( chartOption === 'MDS Scatter Plots')
+  {
+    $.post("", {'data': 'mds scatter plot'}, function(data_infunc){
+      mdsData = JSON.parse(data_infunc);
+      console.log(mdsData.eoriginalData.mdsDF);
+
+      new ScatterPlot({
+        container: document.querySelector('.mdsscatterplot1'),
+        data: mdsData.eoriginalData.mdsDF,
+        columns: mdsData.eoriginalData.mdsColumns
+      });
+      new ScatterPlot({
+        container: document.querySelector('.mdsscatterplot2'),
+        data: mdsData.erandomSampleData.mdsDF,
+        columns: mdsData.erandomSampleData.mdsColumns
+      });
+      new ScatterPlot({
+        container: document.querySelector('.mdsscatterplot3'),
+        data: mdsData.estratifiedData.mdsDF,
+        columns: mdsData.estratifiedData.mdsColumns
+      });
+      new ScatterPlot({
+        container: document.querySelector('.mdscorscatterplot1'),
+        data: mdsData.coriginalData.mdsDF,
+        columns: mdsData.coriginalData.mdsColumns
+      });
+      new ScatterPlot({
+        container: document.querySelector('.mdscorscatterplot2'),
+        data: mdsData.crandomSampleData.mdsDF,
+        columns: mdsData.crandomSampleData.mdsColumns
+      });
+      new ScatterPlot({
+        container: document.querySelector('.mdscorscatterplot3'),
+        data: mdsData.cstratifiedData.mdsDF,
+        columns: mdsData.cstratifiedData.mdsColumns
+      });
+      $(".mdsTitles").show();
+    });
+
+
+  }
+  else if(chartOption === 'Scatter Matrix')
+  {
+    $.post("", {'data': 'scatter matrix'}, function(data_infunc){
+      matrixData = JSON.parse(data_infunc);
+
+      console.log(matrixData);
+
+      var i;
+      for(i=0;i<9;i++)
+      {
+          new ScatterPlotMatrix({
+              	container: document.querySelector(matClasses[i]),
+                data: matrixData.originalData.attrVals[i],
+                columns: matrixData.originalData.colNames
+          });
+      }
+      for(i=9;i<18;i++)
+      {
+          new ScatterPlotMatrix({
+              	container: document.querySelector(matClasses[i]),
+                data: matrixData.randomSampleData.attrVals[i-9],
+                columns: matrixData.randomSampleData.colNames
+          });
+      }
+      for(i=18;i<27;i++)
+      {
+          new ScatterPlotMatrix({
+              	container: document.querySelector(matClasses[i]),
+                data: matrixData.stratifiedData.attrVals[i-18],
+                columns: matrixData.stratifiedData.colNames
+          });
+      }
+
+
+      $(".matrixTitles").show();
+
+
+    });
+  }
+  else{
+
+  }
+}
+
+var chartSelectDD = d3.select(".chartSelect").insert("select", "svg")
+                                .on("change", changePlot);
+chartSelectDD.selectAll("option").data(charts)
+              .enter().append("option")
+              .attr('value', (d) => {return d;})
+              .text((d) => {return d;});
+
+
+
+var data = {{ data.chart_data | safe }}
+console.log(data);
+
+</script>
+</body>
+</html>

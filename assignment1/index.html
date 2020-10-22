@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Visualization Assignment 1</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="d3.min.js"></script>
+    <script src="chart.js"></script>
+  </head>
+  <style>
+    .bar {
+      fill: '#6e6e6e';
+      opacity: 0.6;
+      }
+      .highlight {
+            fill: #333333;
+        }
+      #header {
+        top: 0; right: 0; left: 0;
+        background: #929292;
+      }
+      body {
+        background-color:#f8f8f8;
+        font-family: Garamond;
+      }
+      h1,h2{
+        background: #929292;
+        color: #ffffff
+      }
+      h3{
+        color: #333333;
+        margin-top:0px;
+        margin-bottom: 0px;
+      }
+      .attributeName, .attributeSelect  {
+          display: inline-block;
+      }
+      .xAxisLabel, .yAxisLabel {
+        color: #333333
+      }
+      .x-axis, .y-axis {
+
+        font-size: 11px
+      }
+
+  </style>
+  <body>
+    <center>
+  <div id="header">
+    <h1 style = "padding-top: 20px;margin-top: 0px;">Visualization Assignment 1</h1>
+    <h2 id="datasetTitle" style = "padding-bottom: 20px;">Craigslist Car Data</h2>
+  </div>
+  <div class="attributeName" style="color:#333333;"><b>Attribute </b></div>
+  <div class="attributeSelect"></div>
+  <div class="chart" style="max-width: 1000px;"></div>
+  <div id="footer">
+    <h3>UJWAL VEMULA</h3>
+    <h3>SBU ID : #########<h3>
+  </div>
+</center>
+    <script type="text/javascript">
+
+      var inputFile = "./vehicles.csv";
+      var numericFields = ['Price', 'Odometer', 'Latitude', 'Longitude'];
+      var categoricalFields = ['Year', 'Manufacturer', 'Condition', 'Model',
+                                'Cylinders', 'Fuel', 'Title_Status',
+                                  'Transmission', 'Drive', 'Size',
+                                    'Type', 'Paint_Color', 'State'];
+
+      var csvData = {};
+      numericFields.forEach((item) => {
+        csvData[item] = [];
+      });
+      categoricalFields.forEach((item) => {
+        csvData[item] = [];
+      });
+      console.log("data");
+
+
+      //read data from csv and saving to a local object
+      d3.csv(inputFile).then(function(data){
+        console.log(data);
+        data.forEach(function(d) {
+          numericFields.forEach((item) => {
+            csvData[item].push(+d[item]);
+          });
+          categoricalFields.forEach((item) => {
+            csvData[item].push(d[item]);
+          });
+        });
+      }).then(() => {
+        console.log(csvData);
+        var chart = new Chart({
+        	container: document.querySelector('.chart'),
+          attrName: "Price",
+          data: csvData["Price"],
+          bins: 20,
+          type: "numeric"
+        });
+
+
+        //function that is triggered on change in the dropdown menu
+        var updateNumericChart = function(){
+          console.log("upadte num");
+          var newField = d3.select(this).property('value');
+          console.log(newField);
+          numericFields.includes(newField)?chart.updateChart(newField, csvData[newField], "numeric")
+                                      :chart.updateChart(newField, csvData[newField], "categorical");
+        };
+
+        //trigger chart update on selection of new attribute from dropdown
+        var attrSelectDD = d3.select(".attributeSelect").insert("select", "svg")
+                                .on("change", updateNumericChart);
+
+        //adding attribute options to the dropdown
+        attrSelectDD.selectAll("option").data(numericFields.concat(categoricalFields))
+                        .enter().append("option")
+                        .attr("value", (d) => {return d;})
+                        .text((d) => {return d;});
+
+      });
+
+    </script>
+
+
+  </body>
+</html>
